@@ -48,7 +48,7 @@ class LinkedList
   end
 
   def tail
-    return "EMPTY LIST!" if head_empty
+    return "EMPTY LIST!" if head_empty?
 
     temp = @head
     unless temp.next_node == nil
