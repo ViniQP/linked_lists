@@ -9,25 +9,24 @@ class LinkedList
     head == nil ? true : false
   end
 
-  def prepend(value)
-    if head_empty?
-      @head = Node.new(value)
-    else 
-      temp = @head
-      @head = Node.new(value)
-      @head.next_node = temp
-    end
-  end
-
   def append(value)
     if head_empty?
-      prepend(value)
+      add_start(value)
     else
       temp = @head
       unless temp.next_node == nil
         temp = temp.next_node
       end
       temp.next_node = Node.new(value)
+    end
+  end
+
+  def add_start(value)
+    if head_empty?
+      @head = Node.new(value)
+    else 
+      temp = @head
+      @head = Node.new(value, temp)
     end
   end
 
@@ -38,7 +37,7 @@ class LinkedList
     
     temp = @head
     count = 1
-    unless temp.next_node == nil 
+    while temp.next_node != nil 
       temp = temp.next_node
       count += 1
     end
@@ -90,27 +89,29 @@ class LinkedList
     return false if head_empty?
 
     temp = @head
-    unless temp.value == value || temp.next_node == nil
+    size = self.size
+    self.size.times do 
+      return true if temp.value == value
       temp = temp.next_node
     end
 
-    return false if temp.next_node == nil
-    true
+    false
   end
 
   def find(value)
-    return false if head_empty?
+    return if head_empty?
     return if contains?(value) == false
 
-    count = 0
+    counter = 0
     temp = @head
-    return count if head.value == value
-    unless temp.value == value
+    return counter if temp.value == value
+    
+    while temp.value != value
       temp = temp.next_node
-      count += 1
+      counter += 1
     end
 
-    count
+    counter
   end
 
   def to_s
@@ -119,7 +120,7 @@ class LinkedList
     count = self.size
     string = ""
     temp = @head
-    while count >= 0
+    while count > 0
       string += "(#{temp.value}) -> "
       temp = temp.next_node
       count -= 1
@@ -143,13 +144,20 @@ end
 
 list = LinkedList.new
 list.append("yo")
+list.add_start("los pollos")
 list.append("jesser we need to cook")
-list.prepend("better call saul")
+list.add_start("better call saul")
 p list.head
+puts list.size
+puts "-----------"
 puts list.contains?("asac schrader")
 puts list.contains?("yo")
-
+puts list.contains?("los pollos")
+puts "----------------"
 puts list.find("yo")
+puts list.find("better call saul")
+puts list.find("jesser we need to cook")
+puts list.find("los pollos")
 p list.find("asac schrader")
 
 puts list.at(1)
