@@ -14,10 +14,9 @@ class LinkedList
       @head = Node.new(value)
     else 
       temp = @head
-      @head = value
+      @head = Node.new(value)
       @head.next_node = temp
     end
-
   end
 
   def append(value)
@@ -33,7 +32,7 @@ class LinkedList
   end
 
   def size
-    if head_null? == true
+    if head_empty? == true
       return 0
     end
     
@@ -61,15 +60,73 @@ class LinkedList
   def at(index)
     return "EMPTY LIST!" if head_empty?
 
-    count = index
+    count = 0
     temp = @head
-    while count > 0
+    while count < index
       break if temp.next_node == nil
 
-      count -= 1 
+      count += 1 
       temp = temp.next_node 
     end
-    temp
+    temp.nil? ? "NOT FOUND!" : temp
+  end
+
+  def pop
+    return "EMPTY LIST!" if head_empty?
+    
+    if self.size == 1
+      return_value = @head
+      @head = nil
+    else
+      temp = at(self.size - 1)
+      return_value = temp.next_node
+      temp.next_node = nil
+    end
+    
+    return_value
+  end
+
+  def contains?(value)
+    return false if head_empty?
+
+    temp = @head
+    unless temp.value == value || temp.next_node == nil
+      temp = temp.next_node
+    end
+
+    return false if temp.next_node == nil
+    true
+  end
+
+  def find(value)
+    return false if head_empty?
+    return if contains?(value) == false
+
+    count = 0
+    temp = @head
+    return count if head.value == value
+    unless temp.value == value
+      temp = temp.next_node
+      count += 1
+    end
+
+    count
+  end
+
+  def to_s
+    return if head_empty?
+    
+    count = self.size
+    string = ""
+    temp = @head
+    while count >= 0
+      string += "(#{temp.value}) -> "
+      temp = temp.next_node
+      count -= 1
+    end
+    string += "nil"
+
+    string
   end
 end
 
@@ -80,14 +137,20 @@ class Node
     @value = value
     @next_node = next_node
   end
-
 end
 
 # spdksapdokasfopdaskf 
 
 list = LinkedList.new
-list.append("yo bitch")
+list.append("yo")
 list.append("jesser we need to cook")
+list.prepend("better call saul")
 p list.head
+puts list.contains?("asac schrader")
+puts list.contains?("yo")
 
-puts list.at(2)
+puts list.find("yo")
+p list.find("asac schrader")
+
+puts list.at(1)
+puts list.to_s
